@@ -1,0 +1,27 @@
+{
+  "name": "icqq",
+  "type": "module",
+  "version": "0.1.0",
+  "repository": "https://github.com/karin0/ticq",
+  "license": "MPL-2.0",
+  "main": "index.js",
+  "dependencies": {
+    "events": "^3.3.0",
+    "https-proxy-agent": "^7.0.4",
+    "icqq": "^0.6.10",
+    "log4js": "^6.9.1",
+    "telegraf": "^4.16.3"
+  },
+  "devDependencies": {
+    "prettier": "3.2.5"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "arrowParens": "avoid"
+  },
+  "scripts": {
+    "format": "prettier --write .",
+    "start": "node index.js"
+  }
+}
