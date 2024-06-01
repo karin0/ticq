@@ -137,7 +137,7 @@ class Client extends EventEmitter {
     log.info('Client logged in')
     const bot = this.bot
 
-    bot.on(message('text'), this._on_msg)
+    bot.on(message('text'), ctx => this._on_msg(ctx))
 
     bot.launch(() => {
       log.info('Bot started')
