@@ -11,11 +11,17 @@ if (process.env.NODE_ENV === 'development') {
   log.level = 'debug'
 }
 
-const allowed_chats = undefined
+let allowed_chats = undefined
 
 if (process.env.TICQ_ALLOWED_CHATS) {
-  const allowed_chats = process.env.TICQ_ALLOWED_CHATS.split(',').map(Number)
+  allowed_chats = process.env.TICQ_ALLOWED_CHATS.split(',').map(Number)
   log.info('Allowed chats:', allowed_chats)
+}
+
+let relay_allowed_ids = undefined
+if (process.env.TICQ_RELAY_ALLOWED_IDS) {
+  relay_allowed_ids = process.env.TICQ_RELAY_ALLOWED_IDS.split(',').map(Number)
+  log.info('Relay allowed ids:', relay_allowed_ids)
 }
 
 class FriendMap {
@@ -98,22 +104,37 @@ class Client extends EventEmitter {
       log.warn('Bad chat:', ctx)
       return
     }
+    let msg = ctx.message
+    log.debug('Msg:', msg, ctx.from)
 
     const opts = {
-      reply_to_message_id: ctx.message.message_id,
-      message_id: ctx.message.message_id,
+      reply_to_message_id: msg.message_id,
+      message_id: msg.message_id,
     }
+
+    let { text } = msg
+    if (
+      relay_allowed_ids &&
+      msg.reply_to_message &&
+      relay_allowed_ids.includes(msg.from.id) &&
+      text.startsWith('/relay')
+    ) {
+      msg = msg.reply_to_message
+      text = text.slice(6).trim()
+      if (!text.length) text = msg.text
+      log.debug('Relay msg:', text)
+    }
+
     const sender = {
-      user_id: ctx.from.id,
-      nickname: ctx.from.username,
+      user_id: msg.from.id,
+      nickname: msg.from.username,
     }
-    const { text } = ctx.message
     const e = {
       post_type: 'message',
       message_type: 'group',
       sub_type: 'normal',
       message: [{ type: 'text', text }],
-      from_id: ctx.from.id,
+      from_id: msg.from.id,
       text,
       sender,
       ...sender,

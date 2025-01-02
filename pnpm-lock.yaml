@@ -23,36 +23,15 @@ importers:
         specifier: ^4.16.3
         version: 4.16.3
     devDependencies:
-      '@types/events':
-        specifier: ^3.0.3
-        version: 3.0.3
-      '@types/node':
-        specifier: ^20.11.30
-        version: 20.11.30
       prettier:
         specifier: 3.2.5
         version: 3.2.5
-      typescript:
-        specifier: ^5.4.3
-        version: 5.4.3
 
 packages:
   '@telegraf/types@7.1.0':
     resolution:
       {
         integrity: sha512-kGevOIbpMcIlCDeorKGpwZmdH7kHbqlk/Yj6dEpJMKEQw5lk0KVQY0OLXaCswy8GqlIVLd5625OB+rAntP9xVw==,
-      }
-
-  '@types/events@3.0.3':
-    resolution:
-      {
-        integrity: sha512-trOc4AAUThEz9hapPtSd7wf5tiQKvTtu5b371UxXdTuqzIh0ArcRspRP0i0Viu+LXstIQ1z96t1nsPxT9ol01g==,
-      }
-
-  '@types/node@20.11.30':
-    resolution:
-      {
-        integrity: sha512-dHM6ZxwlmuZaRmUPfv1p+KrdD1Dci04FbdEm/9wEMouFqxYoFl5aMkt0VMAUtYRQDyYvD41WJLukhq/ha3YuTw==,
       }
 
   abort-controller@3.0.0:
@@ -411,20 +390,6 @@ packages:
         integrity: sha512-hXc5npX73EeFc64PX1fyofdeyMVyXrNwLNbxAkirymK3AoTcn+xfbeYjfXOJl8iuKsciYQf1Q6VusAK1FUVcGw==,
       }
 
-  typescript@5.4.3:
-    resolution:
-      {
-        integrity: sha512-KrPd3PKaCLr78MalgiwJnA25Nm8HAmdwN3mYUYZgG/wizIo9EainNVQI9/yDavtVFRN2h3k8uf3GLHuhDMgEHg==,
-      }
-    engines: { node: '>=14.17' }
-    hasBin: true
-
-  undici-types@5.26.5:
-    resolution:
-      {
-        integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==,
-      }
-
   universalify@0.1.2:
     resolution:
       {
@@ -446,12 +411,6 @@ packages:
 
 snapshots:
   '@telegraf/types@7.1.0': {}
-
-  '@types/events@3.0.3': {}
-
-  '@types/node@20.11.30':
-    dependencies:
-      undici-types: 5.26.5
 
   abort-controller@3.0.0:
     dependencies:
@@ -651,10 +610,6 @@ snapshots:
   tr46@0.0.3: {}
 
   triptrap@0.0.17: {}
-
-  typescript@5.4.3: {}
-
-  undici-types@5.26.5: {}
 
   universalify@0.1.2: {}
 
