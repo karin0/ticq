@@ -1,9 +1,12 @@
+import nodeFetch from 'node-fetch'
 import log4js from 'log4js'
 import { segment } from 'icqq'
 import { EventEmitter } from 'events'
 import { HttpsProxyAgent } from 'https-proxy-agent'
-import { Telegraf, Input } from 'telegraf'
-import { message } from 'telegraf/filters'
+import { Bot, InputFile } from 'grammy'
+import { setDefaultResultOrder } from 'node:dns'
+
+setDefaultResultOrder('ipv4first')
 
 const log = log4js.getLogger('ticq')
 
@@ -50,16 +53,25 @@ class Client extends EventEmitter {
       process.env.TICQ_PROXY ||
       process.env.HTTPS_PROXY ||
       process.env.HTTP_PROXY
-    this.bot = new Telegraf(
-      process.env.TICQ_BOT_TOKEN,
-      proxy
-        ? {
-            telegram: {
-              agent: new HttpsProxyAgent(proxy),
-            },
-          }
-        : undefined,
-    )
+    const apiRoot = process.env.TICQ_API_ROOT
+    const agent = proxy
+      ? new HttpsProxyAgent(proxy, {
+          timeout: 30000,
+          autoSelectFamily: false,
+        })
+      : undefined
+
+    this.bot = new Bot(process.env.TICQ_BOT_TOKEN, {
+      client: {
+        apiRoot,
+        fetch: proxy
+          ? (url, options) => {
+              options.agent = agent
+              return nodeFetch(url, options)
+            }
+          : undefined,
+      },
+    })
     this.fl = new FriendMap()
     this.uin = 1234567890
   }
@@ -75,12 +87,12 @@ class Client extends EventEmitter {
       else if (m.type === 'text') texts.push(m.text)
       else if (m.type === 'image') {
         const f = m.file
-        if (f instanceof Buffer) images.push(Input.fromBuffer(f))
-        else if (f.startsWith('http:')) images.push(Input.fromURL(f))
-        else
-          images.push(
-            Input.fromLocalFile(f.startsWith('file://') ? f.slice(7) : f),
-          )
+        if (f instanceof Buffer) images.push(new InputFile(f, 'image.jpg'))
+        else if (f.startsWith('http:')) images.push(new InputFile({ url: f }))
+        else {
+          const filePath = f.startsWith('file://') ? f.slice(7) : f
+          images.push(new InputFile(filePath))
+        }
       } else if (m.type === 'at') texts.push('@' + m.text)
       else texts.push(JSON.stringify(m))
     }
@@ -88,7 +100,7 @@ class Client extends EventEmitter {
     if (Array.isArray(msg)) msg.forEach(push)
     else push(msg)
 
-    const tg = this.bot.telegram
+    const tg = this.bot.api
     const text = texts.join('')
     if (images.length > 0) {
       await tg.sendPhoto(chat_id, images[0], { caption: text, ...opts })
@@ -158,15 +170,21 @@ class Client extends EventEmitter {
     log.info('Client logged in')
     const bot = this.bot
 
-    bot.on(message('text'), ctx => this._on_msg(ctx))
+    bot.on('message:text', ctx => this._on_msg(ctx))
 
-    bot.launch(() => {
-      log.info('Bot started')
-      this.emit('system.online')
-    })
+    bot
+      .start({
+        onStart: botInfo => {
+          log.info(`Bot started as ${botInfo.username}`)
+          this.emit('system.online')
+        },
+      })
+      .catch(err => {
+        log.error('Bot polling error:', err)
+      })
 
-    process.once('SIGINT', () => bot.stop('SIGINT'))
-    process.once('SIGTERM', () => bot.stop('SIGTERM'))
+    process.once('SIGINT', () => bot.stop())
+    process.once('SIGTERM', () => bot.stop())
   }
 
   on(event, callback) {
