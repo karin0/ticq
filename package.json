@@ -8,7 +8,7 @@
   "dependencies": {
     "events": "^3.3.0",
     "grammy": "^1.46.0",
-    "https-proxy-agent": "^7.0.6",
+    "https-proxy-agent": "^9.1.0",
     "icqq": "^0.6.10",
     "log4js": "^6.9.1"
   },
