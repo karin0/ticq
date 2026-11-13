@@ -23,9 +23,6 @@ importers:
       log4js:
         specifier: ^6.9.1
         version: 6.9.1
-      node-fetch:
-        specifier: ^2.7.0
-        version: 2.7.0
     devDependencies:
       prettier:
         specifier: 3.2.5

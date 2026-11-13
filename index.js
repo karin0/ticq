@@ -1,4 +1,3 @@
-import nodeFetch from 'node-fetch'
 import log4js from 'log4js'
 import { segment } from 'icqq'
 import { EventEmitter } from 'events'
@@ -54,20 +53,15 @@ class Client extends EventEmitter {
       process.env.HTTPS_PROXY ||
       process.env.HTTP_PROXY
     const apiRoot = process.env.TICQ_API_ROOT
-    const agent = proxy
-      ? new HttpsProxyAgent(proxy, {
-          timeout: 30000,
-          autoSelectFamily: false,
-        })
-      : undefined
-
     this.bot = new Bot(process.env.TICQ_BOT_TOKEN, {
       client: {
         apiRoot,
-        fetch: proxy
-          ? (url, options) => {
-              options.agent = agent
-              return nodeFetch(url, options)
+        baseFetchConfig: proxy
+          ? {
+              agent: new HttpsProxyAgent(proxy, {
+                timeout: 30000,
+                autoSelectFamily: false,
+              }),
             }
           : undefined,
       },
