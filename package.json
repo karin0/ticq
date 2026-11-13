@@ -23,6 +23,7 @@
   },
   "scripts": {
     "format": "prettier --write .",
-    "start": "node index.js"
+    "start": "node index.js",
+    "check": "prettier --check . && node --input-type=module -e \"await import('./index.js')\""
   }
 }
