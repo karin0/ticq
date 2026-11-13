@@ -183,8 +183,14 @@ class Client extends EventEmitter {
         log.error('Bot polling error:', err)
       })
 
-    process.once('SIGINT', () => bot.stop())
-    process.once('SIGTERM', () => bot.stop())
+    // A signal listener keeps Node from exiting, and the host's other handles
+    // keep the process alive, so the signal is raised again once the listener
+    // is gone.
+    for (const signal of ['SIGINT', 'SIGTERM']) {
+      process.once(signal, () =>
+        bot.stop().finally(() => process.kill(process.pid, signal)),
+      )
+    }
   }
 
   on(event, callback) {
