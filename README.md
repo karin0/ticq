@@ -1,6 +1,6 @@
 # ticq
 
-A minimal [Telegraf](https://github.com/telegraf/telegraf) adapter that behaves like [oicq](https://oicqjs.github.io/oicq/index.html)/[icqq](https://github.com/icqqjs/icqq) but drives a Telegram bot.
+A minimal [grammY](https://github.com/grammyjs/grammY) adapter that behaves like [oicq](https://oicqjs.github.io/oicq/index.html)/[icqq](https://github.com/icqqjs/icqq) but drives a Telegram bot.
 
 This is indented for use in [Miao-Yunzai](https://github.com/yoimiya-kokomi/Miao-Yunzai), and only the minimal features are implemented to be compatible with it. Credit goes to the original authors of all these projects.
 
