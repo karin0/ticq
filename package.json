@@ -7,7 +7,7 @@
   "main": "index.js",
   "dependencies": {
     "events": "^3.3.0",
-    "grammy": "^1.43.0",
+    "grammy": "^1.46.0",
     "https-proxy-agent": "^7.0.6",
     "icqq": "^0.6.10",
     "log4js": "^6.9.1",
